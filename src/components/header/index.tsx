@@ -41,18 +41,18 @@ function Refresh() {
 export function Header() {
   return (
     <>
-      <span className="flex justify-self-start items-center gap-4">
-        <Link to="/" className="flex gap-2.5 items-center no-underline">
-          <div className="h-8 w-8 rounded-lg bg-cover flex-shrink-0" title="白鹿新闻" style={{ backgroundImage: "url(/icon.svg)" }} />
-          <span className="text-base font-700 color-primary tracking-tight">白鹿新闻</span>
+      <span className="flex justify-self-start items-center gap-3">
+        <Link to="/" className="flex gap-2 items-center no-underline flex-shrink-0">
+          <div className="h-7 w-7 rounded-lg bg-cover flex-shrink-0" title="白鹿新闻" style={{ backgroundImage: "url(/icon.svg)" }} />
+          <span className="text-sm font-700 color-primary tracking-tight hidden sm:inline">白鹿新闻</span>
         </Link>
         <a
           href="https://www.bailuioai.com"
           target="_blank"
-          className="text-xs color-neutral-400 hover:color-[var(--brand-pink)] transition-colors hidden sm:inline"
+          className="text-xs color-neutral-400 hover:color-[var(--brand-pink)] transition-colors duration-150 hidden lg:inline whitespace-nowrap"
           rel="noopener noreferrer"
         >
-          bailuioai.com
+          bailuioai.com →
         </a>
       </span>
       <span className="justify-self-center">
@@ -60,7 +60,7 @@ export function Header() {
           <NavBar />
         </span>
       </span>
-      <span className="justify-self-end flex gap-2 items-center text-lg color-neutral-500">
+      <span className="justify-self-end flex gap-1 items-center text-lg color-neutral-400">
         <Refresh />
         <GoTop />
       </span>

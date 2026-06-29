@@ -33,28 +33,28 @@ function RootComponent() {
     <>
       <GlobalOverlayScrollbar
         className={$([
-          !isMobile && "px-4",
+          !isMobile && "px-3",
           "h-full overflow-x-auto",
-          "md:(px-8)",
-          "lg:(px-20)",
+          "md:(px-6)",
+          "lg:(px-12)",
         ])}
       >
         <header
           className={$([
-            "grid items-center py-4 px-4",
+            "grid items-center py-3 px-3",
             "lg:(py-5)",
             "sticky top-0 z-10 backdrop-blur-lg",
             "border-b border-[var(--line)] bg-[var(--surface)]/80",
           ])}
           style={{
             gridTemplateColumns: "auto 1fr auto",
-            gap: "1rem",
+            gap: "0.5rem",
           }}
         >
           <Header />
         </header>
         <main className={$([
-          "mt-4",
+          "mt-3",
           "min-h-[calc(100vh-180px)]",
           "md:(min-h-[calc(100vh-160px)])",
           "lg:(min-h-[calc(100vh-170px)])",
