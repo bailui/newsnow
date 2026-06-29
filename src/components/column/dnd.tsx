@@ -132,9 +132,10 @@ function DndWrapper({ items, setItems, isSingleColumn, children }: PropsWithChil
 function CardOverlay({ id }: { id: SourceID }) {
   return (
     <div className={$(
-      "flex flex-col p-4 backdrop-blur-5",
-      `bg-${sources[id].color}-500 dark:bg-${sources[id].color} bg-op-40!`,
+      "flex flex-col p-4 backdrop-blur-lg",
+      `bg-${sources[id].color}-500 bg-op-30!`,
       !isiOS() && "rounded-2xl",
+      "shadow-xl",
     )}
     >
       <div className={$("flex justify-between mx-2 items-center")}>
@@ -152,7 +153,7 @@ function CardOverlay({ id }: { id: SourceID }) {
               </span>
               {sources[id]?.title && <span className={$("text-sm", `color-${sources[id].color} bg-base op-80 bg-op-50! px-1 rounded`)}>{sources[id].title}</span>}
             </span>
-            <span className="text-xs op-70">拖拽中</span>
+            <span className="text-xs op-80 color-white">拖拽中</span>
           </span>
         </div>
         <div className={$("flex gap-2 text-lg", `color-${sources[id].color}`)}>

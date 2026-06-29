@@ -9,21 +9,57 @@ body,
   padding: 0;
 }
 
-@font-face {
-  font-family: 'Poppins';
-  src: url("/Baloo2-Bold.subset.ttf") /* keep for fallback */;
+/* Brand colors */
+:root {
+  --brand-pink: #ff5f93;
+  --brand-teal: #35bdb4;
+  --ink: #172033;
+  --ink-soft: #2d3a4f;
+  --surface: #f8f9fb;
+  --surface-card: #ffffff;
+  --line: #e8ecf1;
+  --shadow-sm: 0 1px 3px rgba(23, 32, 51, 0.06);
+  --shadow-md: 0 4px 16px rgba(23, 32, 51, 0.08);
+  --shadow-lg: 0 8px 32px rgba(23, 32, 51, 0.10);
 }
-
 
 html.dark {
   color-scheme: dark;
+  --ink: #e8ecf1;
+  --ink-soft: #a0aec0;
+  --surface: #0f1419;
+  --surface-card: #1a1f2e;
+  --line: #2d3748;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
 }
 
 body {
-  --at-apply: color-base bg-base sprinkle-primary text-base;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: "Poppins", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Card design */
+.news-card {
+  background: var(--surface-card);
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--line);
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  overflow: hidden;
+}
+.news-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* Smooth buttons */
+button, a {
+  transition: all 0.15s ease;
 }
 
 button:disabled {
@@ -33,15 +69,14 @@ button:disabled {
 
 ::-webkit-scrollbar-thumb {
   border-radius: 8px;
+  background: rgba(23, 32, 51, 0.15);
 }
 
-/* https://github.com/KingSora/OverlayScrollbars/blob/master/packages/overlayscrollbars/src/styles/themes.scss */
 .dark .os-theme-dark {
   --os-handle-bg: rgba(255, 255, 255, 0.44);
   --os-handle-bg-hover: rgba(255, 255, 255, 0.55);
   --os-handle-bg-active: rgba(255, 255, 255, 0.66);
 }
-
 
 *, a, button {
   cursor: default;
@@ -51,7 +86,6 @@ button:disabled {
 #dropdown-menu li {
   --at-apply: hover:bg-neutral-400/10 rounded-md flex items-center p-1 gap-1;
 }
-
 
 .grabbing * {
   cursor: grabbing;

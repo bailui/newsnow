@@ -41,7 +41,7 @@ export function Menu() {
             id="dropdown-menu"
             className={$([
               "w-200px",
-              "bg-primary backdrop-blur-5 bg-op-70! rounded-lg shadow-xl",
+              "bg-[var(--surface-card)] backdrop-blur-lg rounded-xl shadow-lg border border-[var(--line)]",
             ])}
             initial={{
               scale: 0.9,
@@ -50,7 +50,7 @@ export function Menu() {
               scale: 1,
             }}
           >
-            <ol className="bg-base bg-op-70! backdrop-blur-md p-2 rounded-lg color-base text-base">
+            <ol className="p-2 rounded-lg text-sm">
               {enableLogin && (loggedIn
                 ? (
                     <li onClick={logout}>

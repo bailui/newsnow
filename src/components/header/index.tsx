@@ -17,12 +17,6 @@ function GoTop() {
   )
 }
 
-function Github() {
-  return (
-    <button type="button" title="Github" className="i-ph:github-logo-duotone btn" onClick={() => window.open(Homepage)} />
-  )
-}
-
 function Refresh() {
   const currentSources = useAtomValue(currentSourcesAtom)
   const { refresh } = useRefetch()
@@ -49,26 +43,22 @@ export function Header() {
   return (
     <>
       <span className="flex justify-self-start">
-        <Link to="/" className="flex gap-2 items-center">
-          <div className="h-10 w-10 bg-cover" title="logo" style={{ backgroundImage: "url(/icon.svg)" }} />
-          <span className="text-2xl font-brand line-height-none!">
-            <span className="text-xl font-700 color-primary">白鹿</span>
-            <span className="text-xl font-400 color-primary-2">新闻</span>
+        <Link to="/" className="flex gap-3 items-center no-underline">
+          <div className="h-9 w-9 rounded-xl bg-cover shadow-sm flex-shrink-0" title="白鹿新闻" style={{ backgroundImage: "url(/icon.svg)" }} />
+          <span className="flex flex-col leading-tight">
+            <span className="text-lg font-700 color-primary tracking-tight">白鹿新闻</span>
+            <span className="text-xs color-neutral-400 font-500">bailuioai.com</span>
           </span>
         </Link>
-        <a target="_blank" href={`${Homepage}/releases/tag/v${Version}`} className="btn text-sm ml-1 font-mono">
-          {`v${Version}`}
-        </a>
       </span>
       <span className="justify-self-center">
         <span className="hidden md:(inline-block)">
           <NavBar />
         </span>
       </span>
-      <span className="justify-self-end flex gap-2 items-center text-xl text-primary-600 dark:text-primary">
-        <GoTop />
+      <span className="justify-self-end flex gap-3 items-center text-lg color-neutral-500">
         <Refresh />
-        <Github />
+        <GoTop />
         <Menu />
       </span>
     </>

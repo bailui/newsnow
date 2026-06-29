@@ -13,36 +13,34 @@ export default defineConfig({
   ],
   rules: [
     [/^sprinkle-(.+)$/, ([_, d], { theme }) => {
-      // @ts-expect-error >_<
       const hex: any = theme.colors?.[d]?.[400]
       if (hex) {
         return {
           "background-image": `radial-gradient(ellipse 80% 80% at 50% -30%,
-         rgba(${hex2rgba(hex)?.join(", ")}, 0.3), rgba(255, 255, 255, 0));`,
+         rgba(${hex2rgba(hex)?.join(", ")}, 0.15), rgba(255, 255, 255, 0));`,
         }
       }
     }],
     [
       "font-brand",
       {
-        "font-family": `"Poppins", "Noto Sans SC", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace; `,
+        "font-family": `"Poppins", "Noto Sans SC", "Microsoft YaHei", sans-serif`,
       },
     ],
   ],
   shortcuts: {
-    "color-base": "color-neutral-800 dark:color-neutral-300",
-    "bg-base": "bg-zinc-200 dark:bg-dark-600",
-    "btn": "op50 hover:op85 cursor-pointer transition-all",
+    "color-base": "color-[var(--ink)]",
+    "bg-base": "bg-[var(--surface)]",
+    "bg-card": "bg-[var(--surface-card)]",
+    "btn": "op60 hover:op100 cursor-pointer transition-all",
   },
   safelist: [
-    ...["orange", ...new Set(Object.values(sources).map(k => k.color))].map(k =>
-      `bg-${k} color-${k} border-${k} sprinkle-${k} shadow-${k}
-       bg-${k}-500 color-${k}-500
+    ...["pink", "orange", ...new Set(Object.values(sources).map(k => k.color))].map(k =>
+      `bg-${k} color-${k} border-${k} border-t-${k} sprinkle-${k} shadow-${k}
+       bg-${k}-500 color-${k}-500 border-t-${k}-500
        dark:bg-${k} dark:color-${k}`.trim().split(/\s+/)).flat(),
   ],
   extendTheme: (theme) => {
-    // @ts-expect-error >_<
     theme.colors.primary = theme.colors.pink
     return theme
   },
