@@ -1,11 +1,11 @@
 services:
   newsnow:
-    image: ghcr.io/ourongxing/newsnow:latest
-    container_name: newsnow
+    image: ghcr.io/bailui/newsnow:latest
+    container_name: bailuio-news
     ports:
       - '4444:4444'
     volumes:
-      - newsnow_data:/usr/app/.data
+      - bailuio_news_data:/usr/app/.data
     environment:
       - HOST=0.0.0.0
       - PORT=4444
@@ -18,5 +18,5 @@ services:
       - PRODUCTHUNT_API_TOKEN=
 
 volumes:
-  newsnow_data:
-    name: newsnow_data
+  bailuio_news_data:
+    name: bailuio_news_data

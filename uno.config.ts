@@ -25,7 +25,7 @@ export default defineConfig({
     [
       "font-brand",
       {
-        "font-family": `"Baloo 2", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        "font-family": `"Poppins", "Noto Sans SC", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace; `,
       },
     ],
@@ -43,7 +43,7 @@ export default defineConfig({
   ],
   extendTheme: (theme) => {
     // @ts-expect-error >_<
-    theme.colors.primary = theme.colors.red
+    theme.colors.primary = theme.colors.pink
     return theme
   },
 })

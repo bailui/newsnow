@@ -1,3 +1,5 @@
+# 白鹿io · 新闻聚合
+
 ![](/public/og-image.png)
 
 [English](./README.md) | 简体中文 | [日本語](README.ja-JP.md)
@@ -25,7 +27,7 @@
         "newsnow-mcp-server"
       ],
       "env": {
-        "BASE_URL": "https://newsnow.busiyi.world"
+        "BASE_URL": "https://news.bailuioai.com"
       }
     }
   }
@@ -38,7 +40,7 @@
 
 ### 基础部署
 无需登录和缓存功能时，可直接部署至 Cloudflare Pages 或 Vercel：
-1. Fork 本仓库
+1. Fork 本仓库（[bailui/newsnow](https://github.com/bailui/newsnow)）
 2. 导入至目标平台
 
 ### Cloudflare Pages 配置

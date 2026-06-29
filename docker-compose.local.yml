@@ -4,7 +4,7 @@ services:
     ports:
       - '4444:4444'
     volumes:
-      - newsnow_data:/usr/app/.data
+      - bailuio_news_data:/usr/app/.data
     environment:
       - G_CLIENT_ID=
       - G_CLIENT_SECRET=
@@ -13,5 +13,5 @@ services:
       - ENABLE_CACHE=true
 
 volumes:
-  newsnow_data:
-    name: newsnow_data
+  bailuio_news_data:
+    name: bailuio_news_data
