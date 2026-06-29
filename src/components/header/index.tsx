@@ -2,7 +2,6 @@ import { Link } from "@tanstack/react-router"
 import { useIsFetching } from "@tanstack/react-query"
 import type { SourceID } from "@shared/types"
 import { NavBar } from "../navbar"
-import { Menu } from "./menu"
 import { currentSourcesAtom, goToTopAtom } from "~/atoms"
 
 function GoTop() {
@@ -42,24 +41,28 @@ function Refresh() {
 export function Header() {
   return (
     <>
-      <span className="flex justify-self-start">
-        <Link to="/" className="flex gap-3 items-center no-underline">
-          <div className="h-9 w-9 rounded-xl bg-cover shadow-sm flex-shrink-0" title="白鹿新闻" style={{ backgroundImage: "url(/icon.svg)" }} />
-          <span className="flex flex-col leading-tight">
-            <span className="text-lg font-700 color-primary tracking-tight">白鹿新闻</span>
-            <span className="text-xs color-neutral-400 font-500">bailuioai.com</span>
-          </span>
+      <span className="flex justify-self-start items-center gap-4">
+        <Link to="/" className="flex gap-2.5 items-center no-underline">
+          <div className="h-8 w-8 rounded-lg bg-cover flex-shrink-0" title="白鹿新闻" style={{ backgroundImage: "url(/icon.svg)" }} />
+          <span className="text-base font-700 color-primary tracking-tight">白鹿新闻</span>
         </Link>
+        <a
+          href="https://www.bailuioai.com"
+          target="_blank"
+          className="text-xs color-neutral-400 hover:color-[var(--brand-pink)] transition-colors hidden sm:inline"
+          rel="noopener noreferrer"
+        >
+          bailuioai.com
+        </a>
       </span>
       <span className="justify-self-center">
         <span className="hidden md:(inline-block)">
           <NavBar />
         </span>
       </span>
-      <span className="justify-self-end flex gap-3 items-center text-lg color-neutral-500">
+      <span className="justify-self-end flex gap-2 items-center text-lg color-neutral-500">
         <Refresh />
         <GoTop />
-        <Menu />
       </span>
     </>
   )

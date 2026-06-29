@@ -6,20 +6,13 @@ export function NavBar() {
   const currentId = useAtomValue(currentColumnIDAtom)
   const { toggle } = useSearchBar()
   return (
-    <span className={$([
-      "flex p-1.5 rounded-xl bg-[var(--surface-card)] text-sm",
-      "shadow-sm border border-[var(--line)]",
-      "gap-0.5",
-    ])}
-    >
+    <span className="flex items-center gap-1 text-sm">
       <button
         type="button"
         onClick={() => toggle(true)}
         className={$(
-          "px-3 py-1.5 rounded-lg",
-          "hover:bg-[var(--brand-pink)]/10",
-          "op-60 hover:op-100",
-          "cursor-pointer transition-all font-500",
+          "px-3 py-1.5 rounded-lg cursor-pointer transition-all font-500",
+          "color-[var(--ink-soft)] hover:color-[var(--brand-pink)]",
         )}
       >
         更多
@@ -32,8 +25,8 @@ export function NavBar() {
           className={$(
             "px-3 py-1.5 rounded-lg cursor-pointer transition-all font-500",
             currentId === columnId
-              ? "bg-[var(--brand-pink)]/12 color-[var(--brand-pink)] font-600"
-              : "op-60 hover:op-100 hover:bg-[var(--brand-pink)]/5",
+              ? "color-[var(--brand-pink)] font-600"
+              : "color-[var(--ink-soft)] hover:color-[var(--brand-pink)]",
           )}
         >
           {metadata[columnId].name}
