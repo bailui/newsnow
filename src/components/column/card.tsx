@@ -163,7 +163,13 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
         defer
       >
         <div className={$("transition-opacity-500", isFetching && "op-20")}>
-          {!!data?.items?.length && (sources[id].type === "hottest" ? <NewsListHot items={data.items} /> : <NewsListTimeLine items={data.items} />)}
+          {data?.items?.length
+            ? (sources[id].type === "hottest" ? <NewsListHot items={data.items} /> : <NewsListTimeLine items={data.items} />)
+            : !isFetching && (
+              <div className="flex items-center justify-center h-full color-neutral-400 text-sm">
+                暂无内容
+              </div>
+            )}
         </div>
       </OverlayScrollbar>
     </>
@@ -174,7 +180,15 @@ function UpdatedTime({ isError, updatedTime }: { updatedTime: any, isError: bool
   const relativeTime = useRelativeTime(updatedTime ?? "")
   if (relativeTime) return `${relativeTime}更新`
   if (isError) return "获取失败"
-  return "加载中..."
+  return (
+    <span className="flex items-center justify-center gap-2 color-[var(--ink-soft)]">
+      <span className="three-body">
+        <span className="three-body__dot" />
+        <span className="three-body__dot" />
+        <span className="three-body__dot" />
+      </span>
+    </span>
+  )
 }
 
 function DiffNumber({ diff }: { diff: number }) {
