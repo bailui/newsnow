@@ -181,13 +181,14 @@ function UpdatedTime({ isError, updatedTime }: { updatedTime: any, isError: bool
   if (relativeTime) return `${relativeTime}更新`
   if (isError) return "获取失败"
   return (
-    <span className="flex items-center justify-center gap-2 color-[var(--ink-soft)]">
-      <span className="three-body">
+    <div className="flex flex-col items-center justify-center h-full gap-4 color-[var(--ink-soft)]">
+      <span className="three-body" style={{ '--uib-size': '40px' } as React.CSSProperties}>
         <span className="three-body__dot" />
         <span className="three-body__dot" />
         <span className="three-body__dot" />
       </span>
-    </span>
+      <span className="text-xs opacity-60">加载中...</span>
+    </div>
   )
 }
 
