@@ -6,16 +6,17 @@ export function NavBar() {
   const currentId = useAtomValue(currentColumnIDAtom)
   const { toggle } = useSearchBar()
   return (
-    <span className="flex items-center gap-0 text-sm">
+    <nav className="nav-tabs" aria-label="新闻分类">
       <button
         type="button"
         onClick={() => toggle(true)}
         className={$(
-          "px-3 py-1.5 cursor-pointer transition-colors duration-150 whitespace-nowrap",
+          "nav-tab cursor-pointer whitespace-nowrap",
           "color-[var(--ink-soft)] hover:color-[var(--brand-pink)]",
         )}
       >
-        更多
+        <span className="i-ph:magnifying-glass-duotone inline-block text-base"></span>
+        <span>更多</span>
       </button>
       {fixedColumnIds.map(columnId => (
         <Link
@@ -23,18 +24,15 @@ export function NavBar() {
           to="/c/$column"
           params={{ column: columnId }}
           className={$(
-            "relative px-3 py-1.5 cursor-pointer transition-colors duration-150 whitespace-nowrap",
+            "nav-tab cursor-pointer whitespace-nowrap",
             currentId === columnId
-              ? "color-[var(--brand-pink)] font-600"
+              ? "nav-tab-active color-[var(--brand-pink)] font-700"
               : "color-[var(--ink-soft)] hover:color-[var(--brand-pink)]",
           )}
         >
           {metadata[columnId].name}
-          {currentId === columnId && (
-            <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full bg-[var(--brand-pink)]" />
-          )}
         </Link>
       ))}
-    </span>
+    </nav>
   )
 }

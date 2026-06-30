@@ -1,56 +1,64 @@
-import process from "node:process"
+import { XMLParser } from "fast-xml-parser"
+import { load } from "cheerio"
 import type { NewsItem } from "@shared/types"
 
+interface ProductHuntEntry {
+  id?: string
+  title?: string
+  updated?: string
+  published?: string
+  link?: { href?: string } | Array<{ href?: string }>
+  content?: { $text?: string } | string
+}
+
+interface ProductHuntFeed {
+  feed?: {
+    entry?: ProductHuntEntry | ProductHuntEntry[]
+  }
+}
+
+function cleanText(html: string) {
+  return load(html).text().replace(/\s+/g, " ").trim()
+}
+
+function getEntryUrl(link: ProductHuntEntry["link"]) {
+  return Array.isArray(link) ? link[0]?.href : link?.href
+}
+
+function getEntryContent(content: ProductHuntEntry["content"]) {
+  return typeof content === "string" ? content : content?.$text
+}
+
 export default defineSource(async () => {
-  const apiToken = process.env.PRODUCTHUNT_API_TOKEN
-  const token = `Bearer ${apiToken}`
-  if (!apiToken) {
-    throw new Error("PRODUCTHUNT_API_TOKEN is not set")
-  }
-  const query = `
-    query {
-      posts(first: 30, order: VOTES) {
-        edges {
-          node {
-            id
-            name
-            tagline
-            votesCount
-            url
-            slug
-          }
-        }
-      }
-    }
-  `
-
-  const response: any = await myFetch("https://api.producthunt.com/v2/api/graphql", {
-    method: "POST",
-    headers: {
-      "Authorization": token,
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: JSON.stringify({ query }),
+  const xmlText = await myFetch<string>("https://www.producthunt.com/feed", {
+    responseType: "text",
   })
+  const result = new XMLParser({
+    attributeNamePrefix: "",
+    textNodeName: "$text",
+    ignoreAttributes: false,
+  }).parse(xmlText) as ProductHuntFeed
 
-  const news: NewsItem[] = []
-  const posts = response?.data?.posts?.edges || []
+  const entries = result.feed?.entry
+  const list = entries ? (Array.isArray(entries) ? entries : [entries]) : []
 
-  for (const edge of posts) {
-    const post = edge.node
-    if (post.id && post.name) {
-      news.push({
-        id: post.id,
-        title: post.name,
-        url: post.url || `https://www.producthunt.com/posts/${post.slug}`,
+  return list
+    .map((entry): NewsItem | null => {
+      const id = entry.id
+      const title = entry.title
+      const url = getEntryUrl(entry.link)
+      if (!id || !title || !url) return null
+
+      const content = getEntryContent(entry.content)
+      return {
+        id,
+        title,
+        url,
+        pubDate: entry.updated ?? entry.published,
         extra: {
-          info: ` △︎ ${post.votesCount || 0}`,
-          hover: post.tagline,
+          hover: content ? cleanText(content).split("|")[0]?.trim() : undefined,
         },
-      })
-    }
-  }
-
-  return news
+      }
+    })
+    .filter((item): item is NewsItem => Boolean(item))
 })

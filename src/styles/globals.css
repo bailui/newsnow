@@ -1,10 +1,17 @@
 @import url(@unocss/reset/tailwind.css);
 @import url(overlayscrollbars/overlayscrollbars.css);
 
+@font-face {
+  font-family: "Baloo News";
+  src: url("/Baloo2-Bold.subset.ttf") format("truetype");
+  font-display: swap;
+  font-weight: 700;
+}
+
 html,
 body,
 #app {
-  height: 100vh;
+  height: 100dvh;
   margin: 0;
   padding: 0;
 }
@@ -36,11 +43,143 @@ html.dark {
 }
 
 body {
-  background: var(--surface);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(248, 249, 251, 0.96)),
+    var(--surface);
   color: var(--ink);
-  font-family: "Poppins", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Noto Sans SC", "Microsoft YaHei", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-variant-numeric: tabular-nums;
+  text-rendering: optimizeLegibility;
+}
+
+html.dark body {
+  background:
+    linear-gradient(180deg, rgba(18, 24, 35, 0.88), rgba(15, 20, 25, 1)),
+    var(--surface);
+}
+
+.app-header {
+  border-bottom: 1px solid rgba(232, 236, 241, 0.88);
+  background: rgba(248, 249, 251, 0.84);
+  box-shadow: 0 10px 30px rgba(23, 32, 51, 0.04);
+}
+
+html.dark .app-header {
+  border-bottom-color: rgba(45, 55, 72, 0.86);
+  background: rgba(15, 20, 25, 0.82);
+}
+
+.brand-link {
+  min-height: 40px;
+}
+
+.brand-logo {
+  border-radius: 12px;
+  box-shadow: 0 8px 18px rgba(255, 95, 147, 0.20);
+}
+
+.brand-title {
+  font-family: "Baloo News", -apple-system, BlinkMacSystemFont, "Noto Sans SC", sans-serif;
+  letter-spacing: 0;
+  line-height: 1;
+}
+
+.site-link {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 0.65rem;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(232, 236, 241, 0.82);
+  box-shadow: 0 6px 16px rgba(23, 32, 51, 0.035);
+  transition: color 0.18s ease, background-color 0.18s ease, border-color 0.18s ease;
+}
+
+.site-link:hover {
+  background: rgba(255, 95, 147, 0.08);
+  border-color: rgba(255, 95, 147, 0.18);
+}
+
+html.dark .site-link {
+  background: rgba(26, 31, 46, 0.64);
+  border-color: rgba(45, 55, 72, 0.86);
+}
+
+.header-icon-btn {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.68);
+  border: 1px solid rgba(232, 236, 241, 0.92);
+  box-shadow: 0 6px 16px rgba(23, 32, 51, 0.04);
+}
+
+html.dark .header-icon-btn {
+  background: rgba(26, 31, 46, 0.78);
+  border-color: rgba(45, 55, 72, 0.9);
+}
+
+.nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0.25rem;
+  border: 1px solid rgba(232, 236, 241, 0.92);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.74);
+  box-shadow: 0 8px 24px rgba(23, 32, 51, 0.05);
+  scrollbar-width: none;
+}
+
+.nav-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+html.dark .nav-tabs {
+  background: rgba(26, 31, 46, 0.78);
+  border-color: rgba(45, 55, 72, 0.9);
+}
+
+.nav-tab {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.92rem;
+  line-height: 1;
+  letter-spacing: 0;
+  transition: color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.nav-tab:active,
+.header-icon-btn:active {
+  transform: scale(0.98);
+}
+
+.nav-tab-active {
+  background: rgba(255, 95, 147, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 95, 147, 0.18);
+}
+
+.mobile-nav-wrap {
+  position: sticky;
+  top: 61px;
+  z-index: 9;
+  margin: 0 -0.25rem 0.85rem;
+  padding: 0.1rem 0.25rem 0.25rem;
+  background: linear-gradient(180deg, rgba(248, 249, 251, 0.94), rgba(248, 249, 251, 0));
+  backdrop-filter: blur(10px);
 }
 
 /* Card design */
@@ -52,6 +191,11 @@ body {
   transition: box-shadow 0.2s ease, transform 0.15s ease;
   overflow: hidden;
 }
+
+.news-card-shell {
+  height: clamp(380px, 60vh, 500px);
+}
+
 .news-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-1px);
@@ -97,6 +241,10 @@ button:disabled {
   contain-intrinsic-size: auto 40px;
 }
 
+.news-card ol {
+  line-height: 1.48;
+}
+
 /* Reduce paint on scroll */
 header {
   will-change: backdrop-filter;
@@ -109,9 +257,9 @@ header {
 
 /* Three-body loading spinner */
 .three-body {
-  --uib-size: 28px;
+  --uib-size: 35px;
   --uib-speed: 0.8s;
-  --uib-color: var(--brand-pink);
+  --uib-color: #5D3FD3;
   position: relative;
   display: inline-block;
   height: var(--uib-size);
@@ -150,4 +298,45 @@ header {
 @keyframes wobble2 {
   0%, 100% { transform: translateY(0%) scale(1); opacity: 1; }
   50% { transform: translateY(66%) scale(0.65); opacity: 0.8; }
+}
+
+@media (max-width: 767px) {
+  .brand-title {
+    font-size: 1.05rem;
+  }
+
+  .site-link {
+    min-height: 28px;
+    padding: 0 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .nav-tabs {
+    width: 100%;
+    justify-content: flex-start;
+    border-radius: 18px;
+  }
+
+  .nav-tab {
+    min-height: 40px;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.96rem;
+  }
+
+  .news-card {
+    border-radius: 20px;
+    box-shadow: 0 10px 28px rgba(23, 32, 51, 0.07);
+  }
+
+  .news-card:hover {
+    transform: none;
+  }
+
+  .news-card-shell {
+    height: clamp(430px, calc(100dvh - 158px), 620px);
+  }
+
+  .news-card ol {
+    line-height: 1.55;
+  }
 }

@@ -1,11 +1,27 @@
 import type { NewsItem } from "@shared/types"
 import { load } from "cheerio"
-import dayjs from "dayjs/esm"
+
+interface KrHotRankItem {
+  itemId?: string | number
+  templateMaterial?: {
+    itemId?: string | number
+    widgetTitle?: string
+    publishTime?: string | number
+    authorName?: string
+    statFormat?: string
+  }
+}
+
+interface KrHotRankResponse {
+  data?: {
+    hotRankList?: KrHotRankItem[]
+  }
+}
 
 const quick = defineSource(async () => {
   const baseURL = "https://www.36kr.com"
   const url = `${baseURL}/newsflashes`
-  const response = await myFetch(url) as any
+  const response = await myFetch<string>(url)
   const $ = load(response)
   const news: NewsItem[] = []
   const $items = $(".newsflash-item")
@@ -32,54 +48,38 @@ const quick = defineSource(async () => {
 
 const renqi = defineSource(async () => {
   const baseURL = "https://36kr.com"
-  const formatted = dayjs().format("YYYY-MM-DD")
-  const url = `${baseURL}/hot-list/renqi/${formatted}/1`
-
-  const response = await myFetch<any>(url, {
+  const response = await myFetch<KrHotRankResponse>("https://gateway.36kr.com/api/mis/nav/home/nav/rank/hot", {
+    method: "POST",
     headers: {
-      "User-Agent":
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-      "Referer": "https://www.freebuf.com/",
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "Content-Type": "application/json",
+      "Referer": "https://36kr.com/",
+    },
+    body: {
+      partner_id: "web",
+      param: {
+        siteId: 1,
+        platformId: 2,
+      },
     },
   })
 
-  const $ = load(response)
-  const articles: NewsItem[] = []
+  return (response?.data?.hotRankList ?? []).map((item): NewsItem | null => {
+    const material = item.templateMaterial ?? {}
+    const sourceId = item.itemId ?? material.itemId
+    if (!sourceId || !material.widgetTitle) return null
 
-  // 单条新闻选择器
-  const $items = $(".article-item-info")
-
-  $items.each((_, el) => {
-    const $el = $(el)
-
-    // 标题和链接
-    const $a = $el.find("a.article-item-title.weight-bold")
-    const href = $a.attr("href") || ""
-    const title = $a.text().trim()
-
-    const description = $el.find("a.article-item-description.ellipsis-2").text().trim()
-
-    // 作者
-    const author = $el.find(".kr-flow-bar-author").text().trim()
-
-    // 热度
-    const hot = $el.find(".kr-flow-bar-hot span").text().trim()
-
-    if (href && title) {
-      articles.push({
-        url: href.startsWith("http") ? href : `${baseURL}${href}`,
-        title,
-        id: href.slice(3), // 简化处理
-        // url.slice(url.lastIndexOf("/") + 1)
-        extra: {
-          info: `${author}  |  ${hot}`,
-          hover: description,
-        },
-      })
+    const id = String(sourceId)
+    return {
+      url: `${baseURL}/p/${id}`,
+      title: material.widgetTitle,
+      id,
+      pubDate: material.publishTime,
+      extra: {
+        info: [material.authorName, material.statFormat].filter(Boolean).join("  |  "),
+        hover: material.widgetTitle,
+      },
     }
-  })
-  return articles
+  }).filter((item): item is NewsItem => Boolean(item))
 })
 
 export default defineSource({

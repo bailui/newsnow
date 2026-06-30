@@ -34,13 +34,13 @@ export const CardWrapper = forwardRef<HTMLElement, ItemsProps>(({ id, isDragging
       ref={ref}
       className={$(
         "flex flex-col rounded-2xl p-3 sm:p-4 cursor-default news-card",
+        "news-card-shell",
         "transition-opacity-300",
         isDragging && "op-50",
       )}
       style={{
         borderTop: "3px solid var(--brand-pink)",
         transformOrigin: "50% 50%",
-        height: "clamp(380px, 60vh, 500px)",
         ...style,
       }}
       {...props}
@@ -103,6 +103,7 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
   })
 
   const { isFocused, toggleFocus } = useFocusWith(id)
+  const hasItems = !!data?.items?.length
 
   return (
     <>
@@ -153,8 +154,8 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
 
       <OverlayScrollbar
         className={$([
-          "h-full p-2 overflow-y-auto rounded-xl bg-[var(--surface)] bg-op-80!",
-          isFetching && `animate-pulse`,
+          "relative flex-1 min-h-0 p-2 overflow-y-auto rounded-xl bg-[var(--surface)] bg-op-80!",
+          isFetching && hasItems && `animate-pulse`,
           `sprinkle-${sources[id].color}`,
         ])}
         options={{
@@ -162,15 +163,13 @@ function NewsCard({ id, setHandleRef }: NewsCardProps) {
         }}
         defer
       >
-        <div className={$("transition-opacity-500", isFetching && "op-20")}>
-          {data?.items?.length
-            ? (sources[id].type === "hottest" ? <NewsListHot items={data.items} /> : <NewsListTimeLine items={data.items} />)
-            : !isFetching && (
-              <div className="flex items-center justify-center h-full color-neutral-400 text-sm">
-                暂无内容
+        {hasItems
+          ? (
+              <div className={$("transition-opacity-500", isFetching && "op-20")}>
+                {sources[id].type === "hottest" ? <NewsListHot items={data.items} /> : <NewsListTimeLine items={data.items} />}
               </div>
-            )}
-        </div>
+            )
+          : <SourceState id={id} isError={isError} isLoading={isFetching} />}
       </OverlayScrollbar>
     </>
   )
@@ -180,14 +179,24 @@ function UpdatedTime({ isError, updatedTime }: { updatedTime: any, isError: bool
   const relativeTime = useRelativeTime(updatedTime ?? "")
   if (relativeTime) return `${relativeTime}更新`
   if (isError) return "获取失败"
+  return "加载中"
+}
+
+function SourceState({ id, isError, isLoading }: { id: SourceID, isError: boolean, isLoading: boolean }) {
+  const title = isLoading ? `正在加载${sources[id].name}` : isError ? "获取失败" : "暂无内容"
+  const desc = isLoading ? "获取最新热点信息" : isError ? "点击右上角刷新重试" : "当前来源暂时没有内容"
+
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-4 color-[var(--ink-soft)]">
-      <span className="three-body" style={{ '--uib-size': '40px' } as React.CSSProperties}>
-        <span className="three-body__dot" />
-        <span className="three-body__dot" />
-        <span className="three-body__dot" />
-      </span>
-      <span className="text-xs opacity-60">加载中...</span>
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 px-6 text-center color-[var(--ink-soft)]" role="status" aria-live="polite">
+      {isLoading && (
+        <span className="three-body mb-1" style={{ "--uib-size": "40px" } as React.CSSProperties}>
+          <span className="three-body__dot" />
+          <span className="three-body__dot" />
+          <span className="three-body__dot" />
+        </span>
+      )}
+      <span className="text-sm font-medium">{title}</span>
+      <span className="text-xs op-55">{desc}</span>
     </div>
   )
 }
@@ -259,7 +268,7 @@ function NewsListHot({ items }: { items: NewsItem[] }) {
             {i + 1}
           </span>
           {!!item.extra?.diff && <DiffNumber diff={item.extra.diff} />}
-          <span className="self-start line-height-none">
+          <span className="self-start leading-snug py-0.5">
             <span className="mr-2 text-base">
               {item.title}
             </span>

@@ -9,8 +9,9 @@ function GoTop() {
   return (
     <button
       type="button"
-      title="Go To Top"
-      className={$("i-ph:arrow-fat-up-duotone", ok ? "op-50 btn" : "op-0")}
+      title="回到顶部"
+      aria-label="回到顶部"
+      className={$("header-icon-btn i-ph:arrow-fat-up-duotone", ok ? "op-70 btn" : "op-0")}
       onClick={goToTop}
     />
   )
@@ -31,8 +32,9 @@ function Refresh() {
   return (
     <button
       type="button"
-      title="Refresh"
-      className={$("i-ph:arrow-counter-clockwise-duotone btn", isFetching && "animate-spin i-ph:circle-dashed-duotone")}
+      title="刷新"
+      aria-label="刷新全部新闻"
+      className={$("header-icon-btn i-ph:arrow-counter-clockwise-duotone btn", isFetching && "animate-spin i-ph:circle-dashed-duotone")}
       onClick={refreshAll}
     />
   )
@@ -42,17 +44,18 @@ export function Header() {
   return (
     <>
       <span className="flex justify-self-start items-center gap-3">
-        <Link to="/" className="flex gap-2 items-center no-underline flex-shrink-0">
-          <div className="h-7 w-7 rounded-lg bg-cover flex-shrink-0" title="白鹿新闻" style={{ backgroundImage: "url(/icon.svg)" }} />
-          <span className="text-sm font-700 color-primary tracking-tight hidden sm:inline">白鹿新闻</span>
+        <Link to="/" className="brand-link flex gap-2 items-center no-underline flex-shrink-0">
+          <div className="brand-logo h-8 w-8 bg-cover flex-shrink-0" aria-hidden="true" style={{ backgroundImage: "url(/icon.svg)" }} />
+          <span className="brand-title text-base font-800 color-primary">白鹿新闻</span>
         </Link>
         <a
           href="https://www.bailuioai.com"
           target="_blank"
-          className="text-xs color-neutral-400 hover:color-[var(--brand-pink)] transition-colors duration-150 hidden lg:inline whitespace-nowrap"
+          title="打开白鹿io主站"
+          className="site-link text-xs color-neutral-400 hover:color-[var(--brand-pink)] whitespace-nowrap"
           rel="noopener noreferrer"
         >
-          bailuioai.com →
+          主站 →
         </a>
       </span>
       <span className="justify-self-center">
@@ -60,7 +63,7 @@ export function Header() {
           <NavBar />
         </span>
       </span>
-      <span className="justify-self-end flex gap-1 items-center text-lg color-neutral-400">
+      <span className="justify-self-end flex gap-1.5 items-center text-lg color-neutral-400">
         <Refresh />
         <GoTop />
       </span>

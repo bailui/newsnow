@@ -76,3 +76,25 @@
 [cmdk-overlay] {
     --at-apply: fixed inset-0 bg-black bg-op-50;
 }
+
+@media (max-width: 767px) {
+    [cmdk-dialog] {
+        width: calc(100vw - 24px);
+        max-width: none;
+        max-height: calc(100dvh - 24px);
+        top: 12px;
+        bottom: 12px;
+        border-radius: 20px;
+        transform: translateX(-50%);
+        overflow: hidden;
+    }
+
+    [cmdk-list] {
+        height: calc(100dvh - 112px);
+        max-height: none;
+    }
+
+    [cmdk-input] {
+        --at-apply: p-4 text-base;
+    }
+}

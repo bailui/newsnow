@@ -14,7 +14,7 @@ export function Column({ id }: { id: FixedColumnID }) {
 
   return (
     <>
-      <div className="flex justify-center md:hidden mb-6">
+      <div className="mobile-nav-wrap md:hidden">
         <NavBar />
       </div>
       {id === currentColumnID && <Dnd />}

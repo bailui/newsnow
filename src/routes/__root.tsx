@@ -4,7 +4,6 @@ import { Outlet, createRootRouteWithContext } from "@tanstack/react-router"
 import { TanStackRouterDevtools } from "@tanstack/router-devtools"
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools"
 import type { QueryClient } from "@tanstack/react-query"
-import { isMobile } from "react-device-detect"
 import { Header } from "~/components/header"
 import { GlobalOverlayScrollbar } from "~/components/common/overlay-scrollbar"
 import { Footer } from "~/components/footer"
@@ -33,7 +32,7 @@ function RootComponent() {
     <>
       <GlobalOverlayScrollbar
         className={$([
-          !isMobile && "px-3",
+          "px-3",
           "h-full overflow-x-auto",
           "md:(px-6)",
           "lg:(px-12)",
@@ -41,13 +40,12 @@ function RootComponent() {
       >
         <header
           className={$([
-            "grid items-center py-3 px-3",
+            "app-header grid items-center py-2.5 px-0",
             "lg:(py-5)",
             "sticky top-0 z-10 backdrop-blur-lg",
-            "border-b border-[var(--line)] bg-[var(--surface)]/80",
           ])}
           style={{
-            gridTemplateColumns: "auto 1fr auto",
+            gridTemplateColumns: "1fr auto 1fr",
             gap: "0.5rem",
           }}
         >
