@@ -33,16 +33,14 @@ export const CardWrapper = forwardRef<HTMLElement, ItemsProps>(({ id, isDragging
     <div
       ref={ref}
       className={$(
-        "flex flex-col h-500px rounded-2xl p-4 cursor-default news-card",
+        "flex flex-col rounded-2xl p-3 sm:p-4 cursor-default news-card",
         "transition-opacity-300",
         isDragging && "op-50",
       )}
       style={{
-        borderTop: `3px solid var(--brand-pink)`,
-        ...style,
-      }}
-      style={{
+        borderTop: "3px solid var(--brand-pink)",
         transformOrigin: "50% 50%",
+        height: "clamp(380px, 60vh, 500px)",
         ...style,
       }}
       {...props}

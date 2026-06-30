@@ -90,3 +90,19 @@ button:disabled {
 .grabbing * {
   cursor: grabbing;
 }
+
+/* Performance optimizations */
+.news-card li, .news-card a {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 40px;
+}
+
+/* Reduce paint on scroll */
+header {
+  will-change: backdrop-filter;
+}
+
+/* Smooth font rendering */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

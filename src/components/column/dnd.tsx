@@ -17,79 +17,57 @@ import { CardWrapper } from "./card"
 import { currentSourcesAtom } from "~/atoms"
 
 const AnimationDuration = 200
-const WIDTH = 350
+const WIDTH = 360
+
 export function Dnd() {
   const [items, setItems] = useAtom(currentSourcesAtom)
   const [parent] = useAutoAnimate({ duration: AnimationDuration })
   useEntireQuery(items)
   const { width } = useWindowSize()
-  const minWidth = useMemo(() => {
-    // double padding = 32
-    return Math.min(width - 32, WIDTH)
-  }, [width])
+  const minWidth = useMemo(() => Math.min(width - 24, WIDTH), [width])
 
   if (!items.length) return null
 
   return (
     <DndWrapper items={items} setItems={setItems} isSingleColumn={isMobile}>
-      <OverlayScrollbar defer className="overflow-x-auto">
+      <OverlayScrollbar defer className="overflow-x-hidden">
         <motion.ol
-          className={isMobile
-            ? "flex px-2 gap-6 pb-4 scroll-smooth"
-            : "grid w-full gap-6"}
+          className={$(
+            "grid w-full gap-4",
+            "sm:gap-5",
+            "lg:gap-6",
+          )}
           ref={parent}
-          style={isMobile
-            ? {
-                // 横向滚动布局
-              }
-            : {
-                gridTemplateColumns: `repeat(auto-fill, minmax(${minWidth}px, 1fr))`,
-              }}
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: {
-              opacity: 0,
-            },
+          style={{
+            gridTemplateColumns: isMobile
+              ? "1fr"
+              : `repeat(auto-fill, minmax(${minWidth}px, 1fr))`,
+          }}
+          initial={!isMobile ? "hidden" : undefined}
+          animate={!isMobile ? "visible" : undefined}
+          variants={!isMobile ? {
+            hidden: { opacity: 0 },
             visible: {
               opacity: 1,
-              transition: {
-                delayChildren: 0.1,
-                staggerChildren: 0.1,
-              },
+              transition: { delayChildren: 0.05, staggerChildren: 0.05 },
             },
-          }}
+          } : undefined}
         >
-          {items.map((id, index) => (
+          {items.map((id) => (
             <motion.li
               key={id}
-              className={$(isMobile && "flex-shrink-0", isMobile && index === items.length - 1 && "mr-2")}
-              style={isMobile ? { width: `${width - 16 > WIDTH ? WIDTH : width - 16}px` } : undefined}
-              transition={{
-                type: "tween",
-                duration: AnimationDuration / 1000,
-              }}
-              variants={{
-                hidden: {
-                  y: 20,
-                  opacity: 0,
-                },
-                visible: {
-                  y: 0,
-                  opacity: 1,
-                },
-              }}
+              className="w-full"
+              variants={!isMobile ? {
+                hidden: { y: 12, opacity: 0 },
+                visible: { y: 0, opacity: 1 },
+              } : undefined}
+              transition={{ type: "tween", duration: 0.15 }}
             >
               <SortableCardWrapper id={id} />
             </motion.li>
           ))}
         </motion.ol>
       </OverlayScrollbar>
-      {isMobile && (
-        <div className="flex justify-center">
-          <span className="text-sm text-gray-500 text-center">左右滑动查看更多</span>
-        </div>
-      )}
     </DndWrapper>
   )
 }
@@ -111,15 +89,12 @@ function DndWrapper({ items, setItems, isSingleColumn, children }: PropsWithChil
       startIndex: fromIndex,
       indexOfTarget: toIndex,
       closestEdgeOfTarget,
-      axis: isSingleColumn ? "horizontal" : "vertical",
+      axis: isSingleColumn ? "vertical" : "vertical",
     })
     setItems(update)
   }, [items, setItems, isSingleColumn])
-  // 避免动画干扰
   const { run } = useThrottleFn(onDropTargetChange, {
-    leading: true,
-    trailing: true,
-    wait: AnimationDuration,
+    leading: true, trailing: true, wait: AnimationDuration,
   })
   const { el } = useAtomValue(goToTopAtom)
   return (
@@ -136,31 +111,21 @@ function CardOverlay({ id }: { id: SourceID }) {
       `bg-${sources[id].color}-500 bg-op-30!`,
       !isiOS() && "rounded-2xl",
       "shadow-xl",
-    )}
-    >
-      <div className={$("flex justify-between mx-2 items-center")}>
+    )}>
+      <div className="flex justify-between mx-2 items-center">
         <div className="flex gap-2 items-center">
-          <div
-            className={$("w-8 h-8 rounded-full bg-cover")}
-            style={{
-              backgroundImage: `url(/icons/${id.split("-")[0]}.png)`,
-            }}
-          />
+          <div className="w-8 h-8 rounded-full bg-cover"
+            style={{ backgroundImage: `url(/icons/${id.split("-")[0]}.png)` }} />
           <span className="flex flex-col">
             <span className="flex items-center gap-2">
-              <span className="text-xl font-bold">
-                {sources[id].name}
-              </span>
+              <span className="text-xl font-bold">{sources[id].name}</span>
               {sources[id]?.title && <span className={$("text-sm", `color-${sources[id].color} bg-base op-80 bg-op-50! px-1 rounded`)}>{sources[id].title}</span>}
             </span>
             <span className="text-xs op-80 color-white">拖拽中</span>
           </span>
         </div>
         <div className={$("flex gap-2 text-lg", `color-${sources[id].color}`)}>
-          <button
-            type="button"
-            className={$("i-ph:dots-six-vertical-duotone", "cursor-grabbing")}
-          />
+          <button type="button" className="i-ph:dots-six-vertical-duotone cursor-grabbing" />
         </div>
       </div>
     </div>
@@ -168,27 +133,15 @@ function CardOverlay({ id }: { id: SourceID }) {
 }
 
 function SortableCardWrapper({ id }: ItemsProps) {
-  const {
-    isDragging,
-    setNodeRef,
-    setHandleRef,
-    OverlayContainer,
-  } = useSortable({ id })
-
+  const { isDragging, setNodeRef, setHandleRef, OverlayContainer } = useSortable({ id })
   useEffect(() => {
     if (OverlayContainer) {
       OverlayContainer!.className += $(`bg-base`, !isiOS() && "rounded-2xl")
     }
   }, [OverlayContainer])
-
   return (
     <>
-      <CardWrapper
-        ref={setNodeRef}
-        id={id}
-        isDragging={isDragging}
-        setHandleRef={setHandleRef}
-      />
+      <CardWrapper ref={setNodeRef} id={id} isDragging={isDragging} setHandleRef={setHandleRef} />
       {OverlayContainer && createPortal(<CardOverlay id={id} />, OverlayContainer)}
     </>
   )
