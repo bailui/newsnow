@@ -6,64 +6,66 @@ interface KrHotRankItem {
   templateMaterial?: {
     itemId?: string | number
     widgetTitle?: string
+    widgetContent?: string
     publishTime?: string | number
     authorName?: string
     statFormat?: string
   }
 }
 
-interface KrHotRankResponse {
-  data?: {
-    hotRankList?: KrHotRankItem[]
+interface KrInitialState {
+  newsflashCatalogData?: {
+    data?: {
+      newsflashList?: {
+        data?: {
+          itemList?: KrHotRankItem[]
+        }
+      }
+      hotlist?: {
+        data?: KrHotRankItem[]
+      }
+    }
   }
 }
 
-const quick = defineSource(async () => {
-  const baseURL = "https://www.36kr.com"
-  const url = `${baseURL}/newsflashes`
-  const response = await myFetch<string>(url)
-  const $ = load(response)
-  const news: NewsItem[] = []
-  const $items = $(".newsflash-item")
-  $items.each((_, el) => {
-    const $el = $(el)
-    const $a = $el.find("a.item-title")
-    const url = $a.attr("href")
-    const title = $a.text()
-    const relativeDate = $el.find(".time").text()
-    if (url && title && relativeDate) {
-      news.push({
-        url: `${baseURL}${url}`,
-        title,
-        id: url,
-        extra: {
-          date: parseRelativeDate(relativeDate, "Asia/Shanghai").valueOf(),
-        },
-      })
-    }
+async function getNewsflashesState() {
+  const response = await myFetch<string>("https://36kr.com/newsflashes", {
+    responseType: "text",
   })
+  const $ = load(response)
+  const script = $("script").toArray().map(el => $(el).html() ?? "").find(text => text.includes("window.initialState="))
+  const json = script?.match(/window\.initialState=(\{.*\})$/s)?.[1]
+  if (!json) throw new Error("Cannot parse 36kr initialState")
+  return JSON.parse(json) as KrInitialState
+}
 
-  return news
+const quick = defineSource(async () => {
+  const baseURL = "https://36kr.com"
+  const state = await getNewsflashesState()
+  return (state.newsflashCatalogData?.data?.newsflashList?.data?.itemList ?? [])
+    .map((item): NewsItem | null => {
+      const material = item.templateMaterial ?? {}
+      const id = item.itemId ?? material.itemId
+      if (!id || !material.widgetTitle) return null
+
+      return {
+        url: `${baseURL}/newsflashes/${id}`,
+        title: material.widgetTitle,
+        id,
+        pubDate: material.publishTime,
+        extra: {
+          hover: material.widgetContent,
+        },
+      }
+    })
+    .filter((item): item is NewsItem => Boolean(item))
 })
 
 const renqi = defineSource(async () => {
   const baseURL = "https://36kr.com"
-  const response = await myFetch<KrHotRankResponse>("https://gateway.36kr.com/api/mis/nav/home/nav/rank/hot", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Referer": "https://36kr.com/",
-    },
-    body: {
-      partner_id: "web",
-      param: {
-        siteId: 1,
-        platformId: 2,
-      },
-    },
-  })
+  const state = await getNewsflashesState()
 
-  return (response?.data?.hotRankList ?? []).map((item): NewsItem | null => {
+  return (state.newsflashCatalogData?.data?.hotlist?.data ?? []).map((item): NewsItem | null => {
     const material = item.templateMaterial ?? {}
     const sourceId = item.itemId ?? material.itemId
     if (!sourceId || !material.widgetTitle) return null
